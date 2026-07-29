@@ -18,7 +18,7 @@ public class UserService {
 
     public User register(RegisterRequest request) {
         if (userRepository.existsByEmail(request.email())) {
-            throw new IllegalArgumentException("Ja existe um usuario cadastrado com este email");
+            throw new IllegalStateException("Ja existe um usuario cadastrado com este email");
         }
 
         User user = new User(null, request.role(), request.name(), request.email(),

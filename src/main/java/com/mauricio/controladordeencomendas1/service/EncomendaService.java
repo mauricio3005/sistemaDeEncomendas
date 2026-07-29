@@ -19,7 +19,7 @@ public class EncomendaService {
 
     public Encomenda findById(Long id) {
         return encomendaRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("Encomenda nao encontrada"));
+                .orElseThrow(() -> new RecursoNaoEncontradoException("Encomenda nao encontrada"));
     }
 
     public List<Encomenda> listPending(User owner) {

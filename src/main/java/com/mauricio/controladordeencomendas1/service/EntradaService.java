@@ -21,19 +21,16 @@ public class EntradaService {
         this.userRepository = userRepository;
     }
 
-    public Encomenda registrar(EntradaRequest request) {
+    public Encomenda registrar(EntradaRequest request, User registeredBy) {
+        if (registeredBy.getRole() != Role.PORTEIRO) {
+            throw new IllegalArgumentException("Somente um porteiro pode registrar a chegada de uma encomenda");
+        }
+
         User owner = userRepository.findById(request.ownerId())
-                .orElseThrow(() -> new IllegalArgumentException("Morador nao encontrado"));
+                .orElseThrow(() -> new RecursoNaoEncontradoException("Morador nao encontrado"));
 
         if (owner.getRole() != Role.MORADOR) {
             throw new IllegalArgumentException("A encomenda precisa ser destinada a um morador");
-        }
-
-        User registeredBy = userRepository.findById(request.registeredById())
-                .orElseThrow(() -> new IllegalArgumentException("Porteiro nao encontrado"));
-
-        if (registeredBy.getRole() != Role.PORTEIRO) {
-            throw new IllegalArgumentException("Somente um porteiro pode registrar a chegada de uma encomenda");
         }
 
         Encomenda encomenda = new Encomenda(null, owner, registeredBy, null, request.sender(), request.description(),
